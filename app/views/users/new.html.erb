@@ -1,0 +1,46 @@
+<% if flash.any? %>
+  <% flash.each do |type, msg| %>
+    <div class="alert alert-<%= type %> text-center">
+      <%= msg %>
+    </div>
+  <% end %>
+<% end %>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Registration Form</title>
+</head>
+
+<body>
+  <div style="margin:auto; width:50%; margin-top:10vh">
+    <%= form_for @user, url: users_path(@user), method: :post, html: { class: "row g-3" } do |form| %>
+      <div class="col-md-4">
+        <%= form.label :name, class: "form-label" %>
+        <%= form.text_field :name, class: "form-control", id: "validationDefault01", required: true %>
+      </div>
+      <div class="col-md-4">
+        <%= form.label :mobile, class: "form-label" %>
+        <%= form.text_field :mobile, class: "form-control", id: "validationDefault02", required: true %>
+      </div>
+      <div class="mb-3">
+        <%= form.label :email, class: "form-label" %>
+        <%= form.email_field :email, class: "form-control", id: "exampleInputEmail1", aria_describedby: "emailHelp" %>
+        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+      </div>
+      <div class="mb-3">
+        <%= form.label :password, class: "form-label" %>
+        <%= form.password_field :password_digest, class: "form-control", id: "exampleInputPassword1" %>
+      </div>
+      <div class="mb-3">
+        <%= form.label :password_confirmation, class: "form-label" %>
+        <%= form.password_field :password_confirmation, class: "form-control", id: "exampleInputPassword1" %>
+      </div>
+      <div class="col-12">
+        <%= form.submit "Submit form", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</body>
+</html>
