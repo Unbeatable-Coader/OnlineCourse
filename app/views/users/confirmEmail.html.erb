@@ -1,0 +1,12 @@
+<h2>Confirm Your Email</h2>
+
+<%= form_with(model: @user, url: confirmEmail_path, method: :post, local: true) do |form| %>
+  <div class="field">
+    <%= form.label :otp, 'Enter OTP' %>
+    <%= form.text_field :otp, autofocus: true, autocomplete: 'off' %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit 'Confirm Email' %>
+  </div>
+<% end %>
