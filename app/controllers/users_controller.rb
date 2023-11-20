@@ -4,20 +4,24 @@ class UsersController < ApplicationController
     end
 
 
-    mailOTP = SecureRandom.hex(3).upcase
-    puts "mailOTP = #{mailOTP}"
-
+    
     def create
+        mailOTP = SecureRandom.hex(3).upcase
         @user = User.new(user_params)
         @email = @user.email
+        ::UserMailer.confirmation_email(@email, mailOTP).deliver_now
         if @user.valid?
-            mailOTP = SecureRandom.hex(3).upcase
-            if mailOTP.present?
-                redirect_to confirmEmail_path
+            redirect_to confirmEmail_path
+            user_entered_otp = params[:user][:otp]
+            @stored_otp = session[:otp]
+            puts "stored otp = #{@stored_otp}"
+            puts "user enterd otp = #{user_entered_otp}"
+            if @stored_otp == user_entered_otp
+                @user.save
+            else
+                flash[:notice] = 'OTP is not valid'
             end
 
-            # UserMailer.with(user: @user).confirmation_email.deliver_now
-            ::UserMailer.confirmation_email(@email, mailOTP).deliver_now
         else
             puts "Validation errors: #{@user.errors.full_messages}"
             flash[:alert] = @user.errors.full_messages
@@ -25,15 +29,8 @@ class UsersController < ApplicationController
         end    
     end
 
-    # def confirmEmail
-    #     puts "otp = #{@otp}"
-    #     if @otp == params[:otp]
-            # @user.save
-    #       redirect_to root_path, notice: 'Your email has been confirmed. You can now log in.'
-    #     else
-    #       redirect_to root_path, alert: 'Invalid OTP. Please try again.'
-    #     end
-    # end
+    def confirmEmail
+    end
 
     private
 

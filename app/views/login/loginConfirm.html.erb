@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Confirm login page</title>
+  </head>
+
+  <body>
+    <div style="margin:auto; width:50%;">
+      <%= form_with url: user_detail_path, method: :post do |form| %>
+        <div class="mb-3">
+          <%= form.label :otp, class: "form-label" %>
+          <%= form.text_field :otp, class: "form-control", id: "otp" %>
+        </div>
+        <%= form.button "Submit", class: "btn btn-primary", type: "submit" %>
+      <% end %>
+    </div>
+  </body>
+</html>

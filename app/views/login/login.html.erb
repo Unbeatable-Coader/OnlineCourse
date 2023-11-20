@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Log In</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+   <style>
+    input{
+        height:30px;
+        width: 200px;
+        font-size: 20px;
+    }
+   </style>
+  </head>
+
+  <body style="background-color:#ccf0dc">
+  <h1 style="text-align:center">Log-In<h1>
+
+  <div style="margin:auto; width:25%; padding 10px; background-color: #7fafad; padding:15px; height:40vh">
+  <%= form_tag "/login" do %>
+  
+      <input type= "email", name= "email", placeholder= "Email"></br></br>
+      <input type= "password", name="password", placeholder="password"></br></br>
+    
+      <input type="submit" value="submit" name="submit" class="btn btn-primary"><br>
+  
+  <% end %>
+  </div>
+  </body>
+</html>
+
+
+
