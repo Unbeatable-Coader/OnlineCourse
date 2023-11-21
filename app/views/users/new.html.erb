@@ -29,6 +29,10 @@
         <%= form.email_field :email, class: "form-control", id: "exampleInputEmail1", aria_describedby: "emailHelp" %>
         <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
       </div>
+      <div class="col-md-4">
+        <%= form.label :UserType, class: "form-label" %>
+        <%= form.text_field :usertype, class: "form-control", id: "usertype", required: true %>
+      </div>
       <div class="mb-3">
         <%= form.label :password, class: "form-label" %>
         <%= form.password_field :password_digest, class: "form-control", id: "exampleInputPassword1" %>

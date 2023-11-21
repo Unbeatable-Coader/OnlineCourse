@@ -1,47 +1,69 @@
 class LoginController < ApplicationController
 
+  before_action :current_user, only: [:user_detail]
+
     def login
         
     end
 
     def verifyOTP
-        mailOTP = SecureRandom.hex(3).upcase
-        email = params[:email]
-        password = params[:password]
-        puts "password = #{password}"
-        puts "email = #{email}"
-        @user = User.find_by(email: email)
-        puts "user = #{@user}"
+      @email = params[:email]
+      @user = User.find_by(email: @email)
+      password = params[:password]
+      mailOTP = rand(1000..9999)
+      puts "otsp = #{mailOTP}"
+      session[:otp] = mailOTP
       
-        ::UserMailer.confirmation_email(email, mailOTP).deliver_now
-      
-        @stored_otp = mailOTP
-        @user.password = BCrypt::Password.create(params[:password])
+      ::UserMailer.confirmation_email(@email, mailOTP).deliver_now
 
-        if @user&.authenticate(@user.password)
-          payload = { email: @user.email }
-          token = JsonWebToken.encode(payload)
-          session[:user_token] = token
-          redirect_to loginConfirm_path
-        else
-          render json: { message: 'User not found or invalid password' }, status: :unauthorized
-        end
+
+      @user.password = BCrypt::Password.create(params[:password])
+      puts "password = #{password}"
+      if @user&.authenticate(@user.password)
+        
+        redirect_to loginConfirm_path
+      else
+        puts "Validation errors: #{@user.errors.full_messages}"
+        flash[:alert] = @user.errors.full_messages
+        return
       end
+
+    end
       
-      def loginConfirm
+    def postlogin
+
+    def loginConfirm
+
+    end
+      stored_otp = session[:otp]
+      puts "stored otp = #{stored_otp}"
+      user_entered_otp = params[:user_entered_otp]
+      puts "user entered otp = #{user_entered_otp}"
+      if session[:otp].to_s.strip == params[:user_entered_otp].to_s.strip
+        puts "login save"
+
+        @user = User.find_by(email: session[:email])
+        if @user.usertype == "Instructor"     #Error
+          
+          redirect_to index2_path
+        else
+          redirect_to index_path
+        end
+        session.delete(:otp)
+      else
+        puts "data not saved"
+        session.delete(:otp)
       end
+    end
       
     
     def user_detail
-        if @stored_otp == params[:otp]
-            redirect_to user_detail_path
-        end
-        @current_user = current_user
-        puts "Current User: #{@current_user.inspect}"
-        token = session[:user_token]
-        decoded_token = JsonWebToken.decode(token)
-        puts "Decoded Token: #{decoded_token.inspect}"
+      @current_user = @current_user
     end
+
+
+
+
 
     private
     def login_params 
@@ -53,6 +75,7 @@ class LoginController < ApplicationController
         if token.present?
           user_info = JsonWebToken.decode(token)
           user_id = user_info[:email]
+          puts " user id = #{user_id}"
           if user_id.present?
             @current_user = User.find_by(email: user_id)
           else

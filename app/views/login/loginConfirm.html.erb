@@ -1,18 +1,14 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Confirm login page</title>
-  </head>
+<h2>Confirm Your Email</h2>
 
-  <body>
-    <div style="margin:auto; width:50%;">
-      <%= form_with url: user_detail_path, method: :post do |form| %>
-        <div class="mb-3">
-          <%= form.label :otp, class: "form-label" %>
-          <%= form.text_field :otp, class: "form-control", id: "otp" %>
-        </div>
-        <%= form.button "Submit", class: "btn btn-primary", type: "submit" %>
-      <% end %>
-    </div>
-  </body>
-</html>
+<%= form_tag postlogin_path, method: :post, local: true do %>
+  <div class="field">
+    <%= label_tag 'user_entered_otp', 'Enter OTP' %>
+    <%= text_field_tag 'user_entered_otp', nil, autofocus: true, autocomplete: 'off' %>
+  </div>
+
+  <div class="actions">
+    <%= submit_tag 'Confirm Email' %>
+  </div>
+<% end %>
+
+

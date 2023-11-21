@@ -1,0 +1,27 @@
+<%= form_with(model: @course, local: true) do |form| %>
+  <h2>Create a New Course</h2>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title, required: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, required: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :Price %>
+    <%= form.text_field :description, required: true %>
+  </div>
+  <div class="field">
+    <%= form.label :video %>
+    <%= form.file_field :Video, required: true %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit 'Create Course' %>
+  </div>
+<% end %>
+
