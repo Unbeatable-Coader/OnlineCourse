@@ -9,6 +9,8 @@ class LoginController < ApplicationController
     def verifyOTP
       @email = params[:email]
       @user = User.find_by(email: @email)
+      session[:user] = @user
+
       password = params[:password]
       mailOTP = rand(1000..9999)
       puts "otsp = #{mailOTP}"
@@ -36,17 +38,33 @@ class LoginController < ApplicationController
 
     end
       stored_otp = session[:otp]
-      puts "stored otp = #{stored_otp}"
       user_entered_otp = params[:user_entered_otp]
-      puts "user entered otp = #{user_entered_otp}"
-      if session[:otp].to_s.strip == params[:user_entered_otp].to_s.strip
-        puts "login save"
+      if session[:otp].to_s.strip == params[:user_entered_otp].to_s.strip 
 
-        @user = User.find_by(email: session[:email])
-        if @user.usertype == "Instructor"     #Error
-          
+        user = session[:user]
+
+        @user = User.new(user)
+
+        userEmail = @user.email
+
+        payload = {email: userEmail }
+        puts "useremail = #{userEmail}"
+        encoded_payload = JsonWebToken.encode(payload)
+
+
+
+        session[:usertype] = encoded_payload
+
+        puts "usertype = #{session[:usertype]}"
+        if  @user.usertype == "Instructor"
+
+        # session[:usertype] = User.find_by(email: @email)
+        # utype = session[:usertype]
+        # if utype == "Instructor"   
+          puts "index2 path"
           redirect_to index2_path
         else
+          puts "index1 path"
           redirect_to index_path
         end
         session.delete(:otp)
@@ -54,8 +72,7 @@ class LoginController < ApplicationController
         puts "data not saved"
         session.delete(:otp)
       end
-    end
-      
+    end 
     
     def user_detail
       @current_user = @current_user

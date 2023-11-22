@@ -1,5 +1,5 @@
 class UserMailer < ApplicationMailer
-    default from: 'rajeshpushpakar01@gmail.com'
+    default from: 'harshdh55@gmail.com'
     def confirmation_email(email, otp)
         puts "this is method from mailer"
         @email = email

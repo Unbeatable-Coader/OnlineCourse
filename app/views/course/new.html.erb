@@ -1,27 +1,48 @@
-<%= form_with(model: @course, local: true) do |form| %>
-  <h2>Create a New Course</h2>
-
-  <div class="field">
-    <%= form.label :title %>
-    <%= form.text_field :title, required: true %>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header text-center">
+          <h2>Create a New Course</h2>
+        </div>
+        <div class="card-body">
+          <%= form_with model: @course, local: true, html: { class: 'form' } do |form| %>
+            <div class="form-group">
+              <%= form.label :title %>
+              <%= form.text_field :title, class: 'form-control', required: true %>
+            </div>
+          
+            <div class="form-group">
+              <%= form.label :description %>
+              <%= form.text_area :description, class: 'form-control', required: true %>
+            </div>
+          
+            <div class="form-group">
+              <%= form.label :Price %>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">$</span>
+                </div>
+                <%= form.text_field :price, class: 'form-control', required: true %>
+              </div>
+            </div>
+          
+            <div class="form-group">
+              <%= form.label :video %>
+              <%= form.file_field :video, class: 'form-control-file', required: true %>
+            </div>
+          
+            <div class="form-group">
+              <%= form.label :document %>
+              <%= form.file_field :document, class: 'form-control-file', required: true %>
+            </div>
+          
+            <div class="form-group text-center">
+              <%= form.submit 'Create Course', class: 'btn btn-primary' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div class="field">
-    <%= form.label :description %>
-    <%= form.text_area :description, required: true %>
-  </div>
-
-  <div class="field">
-    <%= form.label :Price %>
-    <%= form.text_field :description, required: true %>
-  </div>
-  <div class="field">
-    <%= form.label :video %>
-    <%= form.file_field :Video, required: true %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit 'Create Course' %>
-  </div>
-<% end %>
-
+</div>

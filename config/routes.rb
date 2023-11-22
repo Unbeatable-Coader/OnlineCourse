@@ -19,7 +19,8 @@ Rails.application.routes.draw do
   # config/routes.rb
   # post 'process_confirmation', to: 'users#process_confirmation', as: 'process_confirmation'
 
-  get '/newCourse', to: 'course#create'
+  get '/newCourse', to: 'course#new'
+  post '/courses', to: 'course#create'
 
 
   get '/index2', to:'home#index2'

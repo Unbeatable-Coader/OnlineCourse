@@ -1,11 +1,28 @@
-<h1>All Courses</h1>
+<h1 style = "text-align:center">All Courses</h1>
 
-<% @courses.each do |course| %>
-  <div class="course">
-    <h2><%= course.title %></h2>
-    <p><%= course.description %></p>
-    <p><strong>Price:</strong> <%= number_to_currency(course.price) %></p>
-  </div>
-<% end %>
+<div class="row">
+  <% @courses.each do |course| %>
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="card-title"><%= course.title %></h2>
+          <p class="card-text"><%= course.description %></p>
+          <p class="card-text"><strong>Price:</strong> <%= number_to_currency(course.price) %></p>
 
-# <%= link_to 'New Course', new_course_path %>
+          <% if course.video.attached? %>
+            <video class="card-img-top" width="320" height="240" controls>
+              <source src="<%= url_for(course.video) %>" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          <% else %>
+            <p class="card-text">No video available for this course.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+
+
+

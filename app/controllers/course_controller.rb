@@ -1,29 +1,27 @@
 class CourseController < ApplicationController
-
-    before_action :current_user, only: [:new, :create]
+    before_action :current_instructor, only: [:new, :create]
     
     def index
-        @course = Course.all
+        @courses = Course.all
     end
     def new
         @course = Course.new
     end
 
     def create
+        puts "course = #{@course}"
         @course = @current_instructor.courses.build(course_params)
+      
         if @course.save
-            redirect_to courses_path, notice: 'courses created successfull'
+        redirect_to courses_path, notice: 'Course created successfully'
         else
-            if @current_instructor.present?
-
-                flash[:notice] = 'you are not a authorised user'
-                render :new
-            end
-            flash[:notice] = 'Some error is occur please try again.'
-            render :new
+        flash[:notice] = 'Some error occurred, please try again.'
+        render :new
         end
-
     end
+      
+
+    
 
     def uploadFile
 
@@ -32,29 +30,31 @@ class CourseController < ApplicationController
     private
 
     def course_params
-        params.require(:course).permit(:title, :description, :price, :video, :document)
+        params.require(:course).permit(:title, :description, :price, :video, :document, :user_id)
     end
 
-    def current_user
-        token = session[:user_token]
+    def current_instructor
+        token = session[:usertype]
+        puts "token = #{token}"
         if token.present?
           user_info = JsonWebToken.decode(token)
           user_id = user_info[:email]
-          puts " user id = #{user_id}"
+          puts "user id = #{user_id}"
           if user_id.present?
             user = User.find_by(email: user_id)
+            puts "user = #{user}"
             if user.usertype == "Instructor"
-                @current_instructor =  user
-
+              @current_instructor = user 
             else
-                @current_student = user
+              @current_instructor = nil
             end
           else
-            @current_user = nil
+            @current_instructor = nil
           end
         else
-          @current_user = nil
+          @current_instructor = nil
         end
-        @current_user
+        @current_instructor
     end
+      
 end
