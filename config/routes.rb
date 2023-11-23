@@ -25,4 +25,10 @@ Rails.application.routes.draw do
 
   get '/index2', to:'home#index2'
   get '/courses', to: 'course#index'
+
+  get '/course/payment', to: 'payment#create'
+ 
+
+  get 'payment/success', to: 'payment#success', as: 'payment_success'
+  get 'payment/cancel', to: 'payment#cancel', as: 'payment_cancel'
 end

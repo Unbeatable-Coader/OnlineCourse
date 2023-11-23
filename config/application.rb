@@ -23,5 +23,10 @@ module Studymaterial
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    config.stripe = {
+    publishable_key: ENV['pk_test_51OFWPxSEwKmMdlf4cZThadjEzvWkJ4OZN7uYM2jhfDCTxIrEaCNZv9GDLoNlv9aBl5chS9cbgRNxW1coUaMUc7b700eX49EbkG'],
+    secret_key: ENV['STRIPE_SECRET_KEY']
+  }
   end
+
 end

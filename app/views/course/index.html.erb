@@ -1,3 +1,4 @@
+
 <h1 style = "text-align:center">All Courses</h1>
 
 <div class="row">
@@ -8,16 +9,40 @@
           <h2 class="card-title"><%= course.title %></h2>
           <p class="card-text"><%= course.description %></p>
           <p class="card-text"><strong>Price:</strong> <%= number_to_currency(course.price) %></p>
+          
 
+          
           <% if course.video.attached? %>
-            <video class="card-img-top" width="320" height="240" controls>
+          <video class="card-img-top" width="320" height="240" controls>
               <source src="<%= url_for(course.video) %>" type="video/mp4">
               Your browser does not support the video tag.
             </video>
           <% else %>
             <p class="card-text">No video available for this course.</p>
           <% end %>
+
+          <% if course.document.attached? %>
+          <!-- Link to download the document -->
+          <p class="card-text">
+            <strong>Document:</strong>
+            <%= link_to 'Download Document', rails_blob_path(course.document, disposition: 'attachment') %>
+          </p>
+        <% else %>
+          <p class="card-text">No document available for this course.</p>
+        <% end %>
         </div>
+        
+        <%= javascript_include_tag 'https://js.stripe.com/v3/' %>
+      <%= form_tag course_payment_path, method: 'post' do %>
+        <script
+          src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+          data-key="pk_test_51OFWPxSEwKmMdlf4cZThadjEzvWkJ4OZN7uYM2jhfDCTxIrEaCNZv9GDLoNlv9aBl5chS9cbgRNxW1coUaMUc7b700eX49EbkG"
+          data-description="<%= course.description %>"
+          data-amount="<%= course.price * 100 %>"
+          data-locale="auto"
+          data-currency="inr">
+        </script>
+      <% end %>
       </div>
     </div>
   <% end %>
