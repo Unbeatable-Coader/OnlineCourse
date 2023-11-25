@@ -28,6 +28,10 @@ Rails.application.routes.draw do
 
   get '/course/payment', to: 'payment#create'
  
+  post '/enroll', to: 'course#enroll'
+
+  get '/logout', to: 'login#logout'
+  post '/logout', to: 'login#logout'
 
   get 'payment/success', to: 'payment#success', as: 'payment_success'
   get 'payment/cancel', to: 'payment#cancel', as: 'payment_cancel'

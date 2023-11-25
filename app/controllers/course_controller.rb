@@ -1,26 +1,67 @@
 class CourseController < ApplicationController
     before_action :current_instructor, only: [:new, :create]
-    
+    before_action :current_instructor, only: [:enroll]
+
+
     def index
-        @courses = Course.all
+      @courses = Course.all
     end
+
     def new
-        @course = Course.new
+      @course = Course.new
     end
 
     def create
-        puts "course = #{@course}"
-        @course = @current_instructor.courses.build(course_params)
+      puts "course params = #{course_params}"
+      puts "instructor = #{@current_instructor.email}"
       
-        if @course.save
+      @course = @current_instructor.courses.build(course_params)
+      
+      puts "course = #{@course.title}"
+      
+      if @course.save
         redirect_to courses_path, notice: 'Course created successfully'
-        else
-        flash[:notice] = 'Some error occurred, please try again.'
-        render :new
+      else
+        error_messages = @course.errors.full_messages
+        error_messages.each do |message|
+          puts "error = #{message}"
         end
+        
+        
+        render :new 
+      end
     end
+    
       
 
+    def enroll
+    
+      @course = Course.find_by(title: params[:title])
+
+      puts "course id = #{@course}"
+      
+      @enroll =  @current_user.enrollments.build(course: @course)
+      @check = @current_user.enrollments.find_by(course: @course)
+      # puts "course = #{@course}"
+      if !@check.present?
+        if @enroll.save
+          flash[:success] = "You have enrolled successfully"
+          redirect_to courses_path
+        else
+          flash[:warning] = "Course Not Found"
+          redirect_to courses_path
+        end
+      else
+        flash[:danger] = "You have already enrolled."
+          redirect_to courses_path
+      end
+      
+    end
+    
+    
+    def enrollCourse
+      
+    end
     
 
     def uploadFile
@@ -28,7 +69,7 @@ class CourseController < ApplicationController
     end
 
     private
-
+    
     def course_params
         params.require(:course).permit(:title, :description, :price, :video, :document, :user_id)
     end
@@ -45,8 +86,8 @@ class CourseController < ApplicationController
             puts "user = #{user}"
             if user.usertype == "Instructor"
               @current_instructor = user 
-            else
-              @current_instructor = nil
+            elsif user.usertype == "Student"
+              @current_user = user
             end
           else
             @current_instructor = nil
@@ -54,7 +95,7 @@ class CourseController < ApplicationController
         else
           @current_instructor = nil
         end
-        @current_instructor
+        
     end
       
 end

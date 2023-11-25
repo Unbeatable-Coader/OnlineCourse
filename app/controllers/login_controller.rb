@@ -1,5 +1,4 @@
 class LoginController < ApplicationController
-
   before_action :current_user, only: [:user_detail]
 
     def login
@@ -52,22 +51,17 @@ class LoginController < ApplicationController
         encoded_payload = JsonWebToken.encode(payload)
 
 
-
         session[:usertype] = encoded_payload
 
-        puts "usertype = #{session[:usertype]}"
-        if  @user.usertype == "Instructor"
-
-        # session[:usertype] = User.find_by(email: @email)
-        # utype = session[:usertype]
-        # if utype == "Instructor"   
+        puts "user type = #{@user.usertype}"
+        session.delete(:otp)
+        if  @user.usertype == "Instructor"  
           puts "index2 path"
           redirect_to index2_path
         else
           puts "index1 path"
           redirect_to index_path
         end
-        session.delete(:otp)
       else
         puts "data not saved"
         session.delete(:otp)
@@ -75,20 +69,25 @@ class LoginController < ApplicationController
     end 
     
     def user_detail
+      
       @current_user = @current_user
+      puts "current user = #{@current_user}"
     end
 
 
-
+    def logout
+      session.delete(:usertype)
+      redirect_to courses_path
+    end
 
 
     private
     def login_params 
-        params.permit(:name, :password)
+      params.permit(:name, :password)
     end
 
     def current_user
-        token = session[:user_token]
+        token = session[:usertype]
         if token.present?
           user_info = JsonWebToken.decode(token)
           user_id = user_info[:email]
@@ -102,6 +101,5 @@ class LoginController < ApplicationController
           @current_user = nil
         end
         @current_user
-    end
-      
+    end  
 end
