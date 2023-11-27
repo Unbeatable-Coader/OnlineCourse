@@ -7,4 +7,6 @@ class Course < ApplicationRecord
     attr_accessor :stripe_price_id
     has_many :enrollments
     has_many :users, through: :enrollments
+    has_many :reviews
+    has_many :users, through: :reviews
 end

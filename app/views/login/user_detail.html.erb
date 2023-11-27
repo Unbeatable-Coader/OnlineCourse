@@ -90,7 +90,13 @@
                     <tr>
                         <td><%= @current_user.usertype %></td>
                     </tr>
-                    
+                    <tr>
+                    <td>
+                        <% @current_user.enrollments.each do |enrollment| %>
+                        <%= enrollment.course.title %>
+                        <% end %>
+                    </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

@@ -35,32 +35,34 @@ class CourseController < ApplicationController
       
 
     def enroll
-    
-      @course = Course.find_by(title: params[:title])
+      course_id = params[:id]
 
-      puts "course id = #{@course}"
-      
-      @enroll =  @current_user.enrollments.build(course: @course)
-      @check = @current_user.enrollments.find_by(course: @course)
-      # puts "course = #{@course}"
-      if !@check.present?
-        if @enroll.save
-          flash[:success] = "You have enrolled successfully"
-          redirect_to courses_path
+      @course = Course.find_by(id: course_id)
+
+      if @course.present?
+        @enroll = @current_user.enrollments.build(course: @course)
+        @check = @current_user.enrollments.find_by(course: @course&.id)
+
+        if !@check.present?
+          if @enroll.save
+            flash[:success] = "You have enrolled successfully in course"
+            redirect_to courses_path
+          else
+            flash[:warning] = "Course enrollment failed for this course"
+            redirect_to courses_path
+          end
         else
-          flash[:warning] = "Course Not Found"
+          flash[:warning] = "You are already enrolled in this course"
           redirect_to courses_path
         end
       else
-        flash[:danger] = "You have already enrolled."
-          redirect_to courses_path
-      end
-      
+        flash[:warning] = "Course Not Found "
+        redirect_to courses_path
+      end 
     end
     
     
     def enrollCourse
-      
     end
     
 
